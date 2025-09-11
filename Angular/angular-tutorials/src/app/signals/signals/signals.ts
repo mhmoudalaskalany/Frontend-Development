@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, computed, OnInit, Signal, signal, WritableSignal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ChildSignal } from '../components/child-signal/child-signal';
 
@@ -9,7 +9,8 @@ import { ChildSignal } from '../components/child-signal/child-signal';
   styleUrl: './signals.css',
 })
 export class Signals implements OnInit {
-  count = signal(0);
+  count: WritableSignal<number> = signal(0);
+  doubleCount: Signal<number> = computed(() => this.count() * 2);
   constructor() {}
 
   ngOnInit = () => void {};

@@ -3,4 +3,6 @@
 <button class="btn" (click)="updateFromPreviousValue()">update from current value</button>
 <input type="text" name="count" id="count" [(ngModel)]="count" />
 <app-child-signal [internalCount]="count"></app-child-signal>
-<h1>{{ count() }}</h1>
+<h1>Parent Count: {{ count() }}</h1>
+
+<h1>Computed Double Count {{ doubleCount() }}</h1>
