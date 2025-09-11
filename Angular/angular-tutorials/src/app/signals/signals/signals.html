@@ -1,8 +1,19 @@
+<h1>Signals Basics</h1>
 <button class="btn" (click)="printCurrentCountValue()">Print Current Value</button>
 <button class="btn" (click)="increment()">increment</button>
 <button class="btn" (click)="updateFromPreviousValue()">update from current value</button>
 <input type="text" name="count" id="count" [(ngModel)]="count" />
 <app-child-signal [internalCount]="count"></app-child-signal>
 <h1>Parent Count: {{ count() }}</h1>
-
 <h1>Computed Double Count {{ doubleCount() }}</h1>
+
+<hr />
+<h1>Computed Signals</h1>
+<button class="btn" (click)="enableConditionalCount()">Enable Conditional Count</button>
+<button class="btn" (click)="disableConditionalCount()">Disable Conditional Count</button>
+<button class="btn" (click)="incrementConditionalCount()">Increment Conditional Count</button>
+<h1>Conditional Count {{ conditionalCount() }}</h1>
+
+<hr />
+
+<h1>Reading Signals OnPush</h1>
