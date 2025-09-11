@@ -3,6 +3,7 @@ import {
   Component,
   computed,
   effect,
+  EffectRef,
   inject,
   Injector,
   OnInit,
@@ -28,7 +29,7 @@ export class Signals implements OnInit {
 
   // this is to allow effect outside the constructor
   private injector = inject(Injector);
-
+  private loggingEffectReference!: EffectRef;
   conditionalCount: Signal<any> = computed(() => {
     if (this.showCount()) {
       return `The count is ${this.count2()}`;
@@ -72,11 +73,18 @@ export class Signals implements OnInit {
 
   // running effects outside constructor
   initializeLogging = (): void => {
-    effect(
+    this.loggingEffectReference = effect(
       () => {
         console.log(`Current Count 1 is ${this.count()}`);
       },
       { injector: this.injector }
     );
+  };
+  // Destroying Effects
+  // effects are destroyed automatically when  (its context(service or component)) is destroyed
+  // to destroy it manually use EffectRef.destroy()
+
+  destroyEffect = () => {
+    this.loggingEffectReference.destroy();
   };
 }
