@@ -1,1 +1,6 @@
-<p>signals works!</p>
+<button class="btn" (click)="printCurrentCountValue()">Print Current Value</button>
+<button class="btn" (click)="increment()">increment</button>
+<button class="btn" (click)="updateFromPreviousValue()">update from current value</button>
+<input type="text" name="count" id="count" [(ngModel)]="count" />
+<app-child-signal [internalCount]="count"></app-child-signal>
+<h1>{{ count() }}</h1>
