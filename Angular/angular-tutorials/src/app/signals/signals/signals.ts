@@ -109,10 +109,9 @@ export class Signals implements OnInit {
   selectedOption: WritableSignal<ShippingMethod> = signal(this.shippingOptions()[0]);
 
   changeShippingMethod = (event: Event): void => {
-    debugger;
     const target = event.target as HTMLSelectElement;
     const index = parseInt(target.value, 10);
-    this.selectedOption.set(this.shippingOptions()[index]);
+    this.selectedOption.set(this.shippingOptions().filter((x) => x.id == index)[0]);
   };
 
   // update the options to different value to make second signal invalid
@@ -156,7 +155,7 @@ export class Signals implements OnInit {
   changeShippingMethodLinked = (event: Event): void => {
     const target = event.target as HTMLSelectElement;
     const index = parseInt(target.value, 10);
-    this.selectedOptionLinked.set(this.shippingOptionsLinked()[index]);
+    this.selectedOptionLinked.set(this.shippingOptionsLinked().filter((x) => x.id == index)[0]);
   };
 
   // update the shipping options value and check the linked selected option signal value on html
