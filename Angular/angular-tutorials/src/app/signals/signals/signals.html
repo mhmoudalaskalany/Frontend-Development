@@ -19,3 +19,55 @@
 <h1>Reading Signals OnPush</h1>
 <h1>Effects</h1>
 <button class="btn" (click)="destroyEffect()">Destroy</button>
+
+<hr />
+
+<h1>Advanced Topics</h1>
+
+<h2>Linked Signals</h2>
+<p>
+  linked signals are used to make sure our signal always has a valid state when a dependent signal
+  value changes
+</p>
+
+<p>
+  consider we have a drop down options that has the shipping methods that shopper will select from
+</p>
+
+<p>
+  the issue here is using the normal signal can cause issue because the first signal which is
+  shippingOptions can be changed and this can cause the selectedOption signal to contains invalid
+  value
+</p>
+
+<select
+  name="selectedShippingOption"
+  id="selectedShippingOption"
+  (change)="changeShippingMethod($event)"
+>
+  @for(option of shippingOptions(); track $index) {
+  <option [value]="option.id">{{ option.name }}</option>
+  }
+</select>
+
+<button class="btn" (click)="changeShippingOptions()">change normal signal shipping methods</button>
+
+<h3>Signal Selected Payment Method Option {{ selectedOption().name }}</h3>
+
+<p>To fix above issue we use the linked signal</p>
+
+<select
+  name="selectedShippingOptionLinked"
+  id="selectedShippingOptionLinked"
+  (change)="changeShippingMethodLinked($event)"
+>
+  @for(option of shippingOptionsLinked(); track $index) {
+  <option [value]="option.id">{{ option.name }}</option>
+  }
+</select>
+
+<h3>Signal Selected Payment Method Option Linked {{ selectedOptionLinked().name }}</h3>
+
+<button class="btn" (click)="changeShippingOptionsLinked()">
+  change Linked signal shipping methods
+</button>

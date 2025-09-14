@@ -10,10 +10,16 @@ import {
   Signal,
   signal,
   WritableSignal,
+  linkedSignal,
 } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
+import { Observable, of } from 'rxjs';
 import { ChildSignal } from '../components/child-signal/child-signal';
-
+export interface ShippingMethod {
+  id: number;
+  name: string;
+}
 @Component({
   selector: 'app-signals',
   imports: [FormsModule, ChildSignal],
@@ -38,15 +44,10 @@ export class Signals implements OnInit {
     }
   });
 
-  constructor() {
-    effect(() => {
-      console.log(`The count is: ${this.count()}`);
-    });
-  }
-
   ngOnInit() {
     this.initializeLogging();
   }
+
   printCurrentCountValue = (): void => {
     this.count();
   };
@@ -86,5 +87,98 @@ export class Signals implements OnInit {
 
   destroyEffect = () => {
     this.loggingEffectReference.destroy();
+  };
+
+  //-----------------------AdvancedTopics-----------------------
+  // Linked Signals
+  shippingOptions: WritableSignal<ShippingMethod[]> = signal([
+    {
+      id: 1,
+      name: 'air',
+    },
+    {
+      id: 2,
+      name: 'sea',
+    },
+    {
+      id: 3,
+      name: 'ground',
+    },
+  ]);
+
+  selectedOption: WritableSignal<ShippingMethod> = signal(this.shippingOptions()[0]);
+
+  changeShippingMethod = (event: Event): void => {
+    debugger;
+    const target = event.target as HTMLSelectElement;
+    const index = parseInt(target.value, 10);
+    this.selectedOption.set(this.shippingOptions()[index]);
+  };
+
+  // update the options to different value to make second signal invalid
+  changeShippingOptions = () => {
+    this.shippingOptions.set([
+      {
+        id: 1,
+        name: 'Email',
+      },
+      {
+        id: 2,
+        name: 'Will Call',
+      },
+      {
+        id: 3,
+        name: 'Postal Service',
+      },
+    ]);
+    console.log('select options after changing shipping methods', this.selectedOption());
+  };
+  // change the shippingOptions to  invalid value may set the selectedOption to invalid value
+  // to fix this we  need to use linkedSignal
+
+  shippingOptionsLinked: WritableSignal<ShippingMethod[]> = signal([
+    {
+      id: 1,
+      name: 'air',
+    },
+    {
+      id: 2,
+      name: 'sea',
+    },
+    {
+      id: 3,
+      name: 'ground',
+    },
+  ]);
+
+  selectedOptionLinked = linkedSignal(() => this.shippingOptionsLinked()[0]);
+
+  changeShippingMethodLinked = (event: Event): void => {
+    const target = event.target as HTMLSelectElement;
+    const index = parseInt(target.value, 10);
+    this.selectedOptionLinked.set(this.shippingOptionsLinked()[index]);
+  };
+
+  // update the shipping options value and check the linked selected option signal value on html
+  // it will be valid not like above one
+  changeShippingOptionsLinked = () => {
+    this.shippingOptionsLinked.set([
+      {
+        id: 1,
+        name: 'Email',
+      },
+      {
+        id: 2,
+        name: 'Will Call',
+      },
+      {
+        id: 3,
+        name: 'Postal Service',
+      },
+    ]);
+    console.log(
+      'linked select options after changing shipping methods',
+      this.selectedOptionLinked()
+    );
   };
 }
